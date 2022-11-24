@@ -1,9 +1,9 @@
 app:
-  title: Scaffolded Backstage App
+  title: Backstage App
   baseUrl: http://localhost:3000
 
 organization:
-  name: My Company
+  name: Thoughtworks
 
 backend:
   # Used for enabling authentication, secret is shared by all backend plugins
@@ -28,8 +28,12 @@ backend:
   # This is for local development only, it is not recommended to use this in production
   # The production database configuration is stored in app-config.production.yaml
   database:
-    client: better-sqlite3
-    connection: ':memory:'
+    client: pg
+    connection:
+      host: ${POSTGRES_SERVICE_HOST}
+      port: ${POSTGRES_SERVICE_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
   cache:
     store: memory
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
@@ -62,8 +66,11 @@ techdocs:
     type: 'local' # Alternatives - 'googleGcs' or 'awsS3'. Read documentation for using alternatives.
 
 auth:
-  # see https://backstage.io/docs/auth/ to learn about auth providers
-  providers: {}
+  providers:
+    github:
+      development:
+        clientId: ${GITHUB_AUTH_CLIENTID}
+        clientSecret: ${GITHUB_AUTH_CLIENT_SECRET}
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -90,6 +97,14 @@ catalog:
       target: ../../examples/org.yaml
       rules:
         - allow: [User, Group]
+    - type: url
+      target: 'https://github.com/vigneshsv568/Backstage-user/blob/master/thoughtworks/org.yaml'
+      rules:
+        - allow: [User, Group]
+
+
+  
+
 
     ## Uncomment these lines to add more example data
     # - type: url
@@ -100,3 +115,4 @@ catalog:
     #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
     #   rules:
     #     - allow: [User, Group]
+
